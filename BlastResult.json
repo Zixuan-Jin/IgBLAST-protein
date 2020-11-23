@@ -1,0 +1,41 @@
+{
+	"query" : "AAAABBBCC",
+	"querySpecies" : "mouse",
+	"version" : "v1.0",
+	"matches" : [
+	{
+		"match" : "ACABBBBCC",
+		"rank" : 1,
+		"detail" : {
+			"title" : "IGLV5-52*01",
+			"matchRatio" : 0.339,
+			"species" : "mouse",
+			"queryHead" : 229,
+			"queryTail" : 293,
+			"matchHead" : 4,
+			"matchTail" : 62
+		},
+		"alignment" :{
+			"query" : "AAAABBB-CC",
+			"match" : "ACA-BBBBCC"
+		}
+	},
+		{
+		"match" : "ACABBBBCC",
+		"rank" : 2,
+		"detail" : {
+			"title" : "IGLV10-54*01",
+			"matchRatio" : 0.327,
+			"species" : "mouse",
+			"queryHead" : 229,
+			"queryTail" : 293,
+			"matchHead" : 4,
+			"matchTail" : 57
+		},
+		"alignment" :{
+			"query" : "AAAABBB-CC",
+			"match" : "ACA-BBBBCC"
+		}
+	}
+	]
+}
