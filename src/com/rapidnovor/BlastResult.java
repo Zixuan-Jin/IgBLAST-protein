@@ -11,9 +11,13 @@ import java.util.List;
  * Created by Zixuan Jin on 2020-11-23.
  */
 public class BlastResult {
+    /**initial query amino acid sequence*/
     private String query;
+    /**query database*/
     private String querySpecies;
+    /**version of BLAST result format*/
     private final String version = "v1.0";
+    /**list of IgblastMatch to store the match result*/
     private List<IgblastMatch> matches;
 
     public BlastResult(){

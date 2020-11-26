@@ -5,14 +5,23 @@ package com.rapidnovor;
  * Created by Zixuan Jin on 2020-11-20.
  */
 public class IgblastMatch {
-
+    /**
+     * inner class to store some of the information
+     */
     private static class Detail{
+        /**The title of the source gene file of the matched sequence*/
         private String title;
+        /**Matching ratio of the matched result*/
         private double matchRatio;
+        /**The species of the match result*/
         private String species;
+        /**The start position of the matching part in query sequence*/
         private int queryHead;
+        /**The end position of the matching part in query sequence*/
         private int queryTail;
+        /**The start position of the matching part in match sequence*/
         private int matchHead;
+        /**The end position of the matching part in match sequence*/
         private int matchTail;
 
         public void setTitle(String title) {
@@ -66,10 +75,13 @@ public class IgblastMatch {
         }
     }
 
+    /**
+     * inner class to show the alignment of the protein sequence
+     */
     private static class Alignment{
-
+        /**query sequence with alignment*/
         private final String query;
-
+        /**match sequence with alignment*/
         private final String match;
 
         Alignment(String query, String match){
@@ -85,13 +97,13 @@ public class IgblastMatch {
             return match;
         }
     }
-
+    /**initial sequence of matched result*/
     private String match;
-
+    /**rank of the matched result*/
     private int rank;
-
+    /**Detail class to store the details*/
     private Detail detail;
-
+    /**Alignment class to store the alignment*/
     private Alignment alignment;
 
     public void setMatch(String match) {
