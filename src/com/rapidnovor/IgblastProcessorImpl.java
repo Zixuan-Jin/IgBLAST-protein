@@ -17,13 +17,21 @@ public class IgblastProcessorImpl implements IgblastProcessor {
      * List to contain all the species, which can be added in the future
      */
     private final List<String> species = new ArrayList<>();
-    
-    private final int capacity = 3;
 
+    /**
+     * Set the database species
+     */
     public IgblastProcessorImpl(){
         species.addAll(Arrays.asList("mouse", "human"));
     }
 
+    /**
+     *
+     * @param query query amino acid sequence
+     * @return the igblast result of the query
+     * @throws WrongInputMessage input format is wrong, containing illegal amino acid
+     * @throws ExecuteException errors occur when executing the program
+     */
     @Override
     public BlastResult match(String query) throws WrongInputMessage, ExecuteException {
         BlastResult queryResult = new BlastResult();
@@ -40,9 +48,18 @@ public class IgblastProcessorImpl implements IgblastProcessor {
         return queryResult;
     }
 
+    /**
+     *
+     * @param query query amino acid sequence
+     * @param germline set certain database to search
+     * @param alignment set if alignment is needed
+     * @return the Igblast Result of the query
+     * @throws WrongInputMessage input format is wrong, containing illegal amino acid
+     * @throws ExecuteException errors occur when executing the program
+     */
     @Override
     public BlastResult match(String query, String germline, boolean alignment) throws WrongInputMessage, ExecuteException {
-        /**
+        /*
          * result class to store all the result
          */
         BlastResult queryResult = new BlastResult();
@@ -59,6 +76,9 @@ public class IgblastProcessorImpl implements IgblastProcessor {
             throw new WrongInputMessage("Database does not contain that specie");
         }
 
+        /*
+         * Using file stream to parse data
+         */
         try {
             OutputStream output = new FileOutputStream("queryFile");
             OutputStreamWriter writer = new OutputStreamWriter(output);
@@ -89,13 +109,14 @@ public class IgblastProcessorImpl implements IgblastProcessor {
             if(errMessage.length()>0){
                 throw new ExecuteException(errMessage.toString());
             }
-            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             String queryRegular = "^\\s+\\S+\\s+(\\d+)\\s+(\\S+)\\s+(\\d+)\\s*$";
             Pattern queryPattern = Pattern.compile(queryRegular);
             String matchRegular = "^V\\s+(\\S+)%\\s+\\S+\\s+(\\S+)\\s+(\\d+)\\s+(\\S+)\\s+(\\d+)\\s*$";
             Pattern matchPattern = Pattern.compile(matchRegular);
-            
+            /*
+             * cache to store the IgblastMatch Objects
+             */
             Map<String, IgblastMatch> cache = new HashMap<String, IgblastMatch>();
             
             StringBuilder queryAlignment = new StringBuilder();
@@ -103,6 +124,10 @@ public class IgblastProcessorImpl implements IgblastProcessor {
             int queryTail = 0;
             int rank = 1;
 
+            /*
+             * Read the outputStream of the process and convert it to IgblastMatch class by regular expression
+             */
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((line = in.readLine())!=null){
                 if(line.equals("***** No hits found *****")){
                     return null;
@@ -118,6 +143,9 @@ public class IgblastProcessorImpl implements IgblastProcessor {
                 if(!line.equals("") && line.charAt(0) == 'V'){
                     Matcher matchMatcher = matchPattern.matcher(line);
                     if(matchMatcher.find()) {
+                        /*
+                        If the line contains a new match, construct a new IgblastMatch Object
+                        */
                         if(!cache.containsKey(matchMatcher.group(2))) {
                             IgblastMatch newMatch = new IgblastMatch();
                             newMatch.setTitle(matchMatcher.group(2));
@@ -131,6 +159,9 @@ public class IgblastProcessorImpl implements IgblastProcessor {
                             rank++;
                             cache.put(matchMatcher.group(2), newMatch);
                         }
+                        /*
+                        If the line updates a new match, updates the IgblastMatch Object
+                        */
                         else {
                             IgblastMatch temp = cache.get(matchMatcher.group(2));
                             temp.setQueryIndex(queryHead, queryTail);
