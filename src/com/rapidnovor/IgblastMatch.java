@@ -1,5 +1,8 @@
 package com.rapidnovor;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /**
  * @description: Object to store one single match result
  * Created by Zixuan Jin on 2020-11-20.
@@ -126,8 +129,12 @@ public class IgblastMatch {
         return detail;
     }
 
-    public Alignment getAlignment() {
-        return alignment;
+    public String getQueryAlignment() {
+        return alignment.getQuery();
+    }
+
+    public String getMatchAlignment() {
+        return alignment.getMatch();
     }
 
     public void setAlignment(String query, String match){
@@ -184,5 +191,11 @@ public class IgblastMatch {
 
     public IgblastMatch(){
         detail = new Detail();
+    }
+
+    @Override
+    public String toString() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(this);
     }
 }

@@ -1,5 +1,8 @@
 package com.rapidnovor;
 
+import com.rapidnovor.Exception.ExecuteException;
+import com.rapidnovor.Exception.WrongInputMessage;
+
 import java.util.List;
 
 /**
@@ -12,7 +15,7 @@ public interface IgblastProcessor {
      * @param query query amino acid sequence
      * @return class of BlastResult
      */
-    public BlastResult match(String query);
+    public BlastResult match(String query) throws WrongInputMessage, ExecuteException;
     /**
      * function to get the result of IgBLAST in certain database set alignment
      * @param query query amino acid sequence
@@ -20,5 +23,5 @@ public interface IgblastProcessor {
      * @param alignment set if alignment is needed
      * @return class of BlastResult
      */
-    public BlastResult match(String query, String germline, boolean alignment);
+    public BlastResult match(String query, String germline, boolean alignment) throws WrongInputMessage, ExecuteException;
 }

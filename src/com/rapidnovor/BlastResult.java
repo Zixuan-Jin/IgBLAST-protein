@@ -48,6 +48,10 @@ public class BlastResult {
         this.matches.add(match);
     }
 
+    public void addMatches(List<IgblastMatch> matches) {
+        this.matches.addAll(matches);
+    }
+
     @Override
     public String toString() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
