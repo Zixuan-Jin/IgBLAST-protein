@@ -22,7 +22,16 @@ public class IgblastProcessorImpl implements IgblastProcessor {
      * Set the database species
      */
     public IgblastProcessorImpl(){
-        species.addAll(Arrays.asList("mouse", "human"));
+        try {
+            Process process = Runtime.getRuntime().exec("ls database");
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null){
+                species.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -89,12 +98,18 @@ public class IgblastProcessorImpl implements IgblastProcessor {
             e.printStackTrace();
         }
 
+//        String cmdline = String.format("bin/igblastp -query queryFile " +
+//                        "-germline_db_V database/%s/%s " +
+//                        "-outfmt 3 " +
+//                        "-organism %s " +
+//                        "-num_threads 8",
+//                germline,
+//                germline,
+//                germline);
         String cmdline = String.format("bin/igblastp -query queryFile " +
-                        "-germline_db_V database/%s/%s_IGHV " +
+                        "-germline_db_V database/%s/%s " +
                         "-outfmt 3 " +
-                        "-organism %s " +
                         "-num_threads 8",
-                germline,
                 germline,
                 germline);
 

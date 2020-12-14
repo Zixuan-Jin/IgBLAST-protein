@@ -2,9 +2,9 @@ package com.rapidnovor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.tools.javac.util.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @description: Object to store the result of IgBLAST
@@ -19,9 +19,11 @@ public class BlastResult {
     private final String version = "v1.0";
     /**list of IgblastMatch to store the match result*/
     private List<IgblastMatch> matches;
+//
+//    private List<Pair<Double, IgblastMatch>> cache;
 
     public BlastResult(){
-        matches = new ArrayList<IgblastMatch>();
+        matches = new ArrayList<>();
     }
 
     public String getQuery() {
@@ -44,17 +46,46 @@ public class BlastResult {
         return matches;
     }
 
-    public void addMatch(IgblastMatch match) {
-        this.matches.add(match);
+    public IgblastMatch getMatch(int rank){
+        return matches.get(rank);
     }
 
-    public void addMatches(List<IgblastMatch> matches) {
-        this.matches.addAll(matches);
+    public void addMatch(IgblastMatch match) {
+        PriorityQueue<IgblastMatch> cache = new PriorityQueue<>(3, new MatchComparator());
+        cache.addAll(matches);
+        matches.clear();
+        if(cache.size()>=3){
+            cache.offer(match);
+            cache.poll();
+        }else{
+            cache.add(match);
+        }
+        int rank = 3;
+        while(!cache.isEmpty()){
+            IgblastMatch temp = cache.poll();
+            temp.setRank(rank);
+            rank--;
+            matches.add(0, temp);
+        }
+    }
+
+    public void addMatches(List<IgblastMatch> ms) {
+        for(IgblastMatch temp: ms){
+            addMatch(temp);
+        }
     }
 
     @Override
     public String toString() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(this);
+    }
+}
+
+class MatchComparator implements Comparator<IgblastMatch>{
+
+    @Override
+    public int compare(IgblastMatch o1, IgblastMatch o2) {
+        return Double.compare(o1.getMatchRatio(), o2.getMatchRatio());
     }
 }
